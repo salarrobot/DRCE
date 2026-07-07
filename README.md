@@ -15,7 +15,7 @@ status bar below the maps.
 
 ```bash
 conda env create -f environment.yml 
-conda activate {YOUR_ENV_NAME}
+conda activate [YOUR_ENV_NAME]
 
 python main.py --scenario 1      
 python main.py --scenario 2 
