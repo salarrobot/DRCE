@@ -14,12 +14,12 @@ status bar below the maps.
 ## Quick start
 
 ```bash
-conda env create -f environment.yml   # once
-conda activate MuJoCo
+conda env create -f environment.yml 
+conda activate {YOUR_ENV_NAME}
 
-python main.py --scenario 1          # live animation (needs a display)
-python main.py --scenario 2 --save   # render media/explore2.gif + comparison
-python main.py --scenario 3 --headless
+python main.py --scenario 1      
+python main.py --scenario 2 
+python main.py --scenario 3
 python verify.py                     # headless regression, all 3 scenarios
 ```
 
