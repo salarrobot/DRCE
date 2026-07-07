@@ -23,17 +23,6 @@ python main.py --scenario 3
 python verify.py                     # headless regression, all 3 scenarios
 ```
 
-## What each robot runs
-
-| | R1 (blue) | R2 (vermilion) |
-|---|---|---|
-| Frontier selection | **Nearest-Frontier** (Yamauchi 1997): closest reachable frontier cluster by path distance | **Info-Gain utility** (Gonzalez-Banos & Latombe): expected unknown area visible from the frontier, discounted by travel cost `gain * exp(-0.35 d)` |
-| Behavior | short hops, sweeps outward room by room | favors large unexplored pockets, accepts longer drives |
-
-Everything else is shared infrastructure, so the comparison isolates the
-strategy: log-odds occupancy mapping (free/occupied/unknown), frontier
-clustering, A* with line-of-sight smoothing on an obstacle-inflated grid, and a
-carrot-tracking controller with monotonic progress.
 
 ## Scenarios
 
@@ -109,31 +98,4 @@ pocket" and "far away" the same thing.
   grid when nearby, and a priority protocol makes the lower-priority robot yield
   (and retreat-and-replan if the standoff persists).
 
-## Outputs
 
-- `media/exploreN.gif` — the live three-panel view rendered with `--save`.
-- `media/comparisonN.png` — final strategy comparison: coverage and attribution
-  curves, distance traveled, cells discovered, and a text summary with
-  efficiency, replans, claims, clearances, map accuracy, and scan overlap.
-- Console report: coverage, map precision/recall vs ground truth, scan overlap,
-  per-robot distance, discovery share, replans, minimum clearances.
-
-## Layout
-
-```
-amrn/world.py     ground truth: SDF shapes, cached grid, vectorized raycasting
-amrn/lidar.py     72-beam scanner, other-robot returns flagged as dynamic
-amrn/mapping.py   shared log-odds grid, frontiers, inflation, attribution
-amrn/planner.py   A* + string-pulling smoothing + path densification
-amrn/explore.py   NearestFrontier / InfoGain strategies + claim penalties
-amrn/robot.py     diff-drive kinematics + carrot tracking controller
-amrn/metrics.py   metrics, report table, comparison figure
-amrn/viz.py       live three-panel view
-main.py           simulation loop + animation / GIF export
-verify.py         headless regression (connectivity, safety, coverage, accuracy)
-```
-
-`verify.py` asserts for every scenario: the inflated free space stays connected,
-coverage reaches >= 95 % of the explorable area, neither robot ever touches an
-obstacle, the robots never touch each other, both robots contribute >= 12 % of
-the discovery, and the mapped walls match ground truth (precision >= 0.85).
